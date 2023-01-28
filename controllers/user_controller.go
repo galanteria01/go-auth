@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -75,6 +76,37 @@ func DeleteUser() gin.HandlerFunc {
 
 func GetAllUsers() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// Get all users code goes here
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		var users []models.User
+		defer cancel()
+
+		results, err := userCollection.Find(ctx, bson.M{})
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, responses.UserResponses{
+				Status:  http.StatusInternalServerError,
+				Message: "Error fetching data",
+				Data:    map[string]interface{}{"data": err.Error()},
+			})
+			return
+		}
+
+		defer results.Close(ctx)
+
+		for results.Next(ctx) {
+			var singleUser models.User
+			if err = results.Decode(&singleUser); err != nil {
+				c.JSON(http.StatusInternalServerError, responses.UserResponses{
+					Status:  http.StatusInternalServerError,
+					Message: "Error fetching data",
+					Data:    map[string]interface{}{"data": err.Error()},
+				})
+			}
+			users = append(users, singleUser)
+		}
+		c.JSON(http.StatusOK, responses.UserResponses{
+			Status:  http.StatusOK,
+			Message: "Successfully fetched users",
+			Data:    map[string]interface{}{"data": users},
+		})
 	}
 }
