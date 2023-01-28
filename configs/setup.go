@@ -30,7 +30,7 @@ func SetupMongo() *mongo.Client {
 	return client
 }
 
-var db *mongo.Client = SetupMongo()
+var DB *mongo.Client = SetupMongo()
 
 func GetCollection(client *mongo.Client, collectionName string) *mongo.Collection {
 	collection := client.Database("auth").Collection(collectionName)
