@@ -58,7 +58,18 @@ func CreateUser() gin.HandlerFunc {
 
 func GetUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// get a user code goes here
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		userId := c.Param("userId")
+		var user models.User
+		defer cancel()
+
+		objId, _ := primitive.ObjectIDFromHex(userId)
+
+		err := userCollection.FindOne(ctx, bson.M{"id": objId}).Decode(&user)
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, responses.UserResponses{})
+		}
 	}
 }
 
@@ -71,6 +82,45 @@ func EditUser() gin.HandlerFunc {
 func DeleteUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		//delete a user code goes here
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		userId := c.Param("userId")
+		defer cancel()
+
+		objId, err := primitive.ObjectIDFromHex(userId)
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, responses.UserResponses{
+				Status:  http.StatusInternalServerError,
+				Message: "Failed to delete user",
+				Data:    map[string]interface{}{"data": err.Error()},
+			})
+			return
+		}
+
+		result, err := userCollection.DeleteOne(ctx, bson.M{"id": objId})
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, responses.UserResponses{
+				Status:  http.StatusInternalServerError,
+				Message: "Failed to delete user",
+				Data:    map[string]interface{}{"data": err.Error()},
+			})
+			return
+		}
+
+		if result.DeletedCount < 1 {
+			c.JSON(http.StatusNotFound, responses.UserResponses{
+				Status:  http.StatusNotFound,
+				Message: "User not found with specified ID",
+				Data:    map[string]interface{}{"data": "User not found with specified ID"},
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, responses.UserResponses{
+			Status:  http.StatusOK,
+			Message: "Deleted Successfully",
+			Data:    map[string]interface{}{"data": result},
+		})
 	}
 }
 
