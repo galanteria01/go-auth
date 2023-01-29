@@ -40,6 +40,7 @@ func CreateUser() gin.HandlerFunc {
 			Id:    primitive.NewObjectID(),
 			Name:  user.Name,
 			Email: user.Email,
+			JobRole: user.JobRole,
 		}
 
 		result, err := userCollection.InsertOne(ctx, newUser)
@@ -140,6 +141,7 @@ func EditUser() gin.HandlerFunc {
 		update := models.User{
 			Name:  user.Name,
 			Email: user.Email,
+			JobRole: user.JobRole,
 		}
 
 		result, err := userCollection.UpdateOne(ctx, bson.M{"id": objId}, update)
