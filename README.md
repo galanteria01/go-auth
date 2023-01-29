@@ -1,4 +1,4 @@
-# Go Authentication API
+# Team Builder(Go Authentication API)
 
 A working and reference authentication API application written in Go.
 

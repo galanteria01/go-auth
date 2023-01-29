@@ -25,7 +25,7 @@ func CreateUser() gin.HandlerFunc {
 		if err := c.BindJSON(&user); err != nil {
 			c.JSON(
 				http.StatusBadRequest,
-				responses.UserResponses{
+				responses.Response{
 					Status:  http.StatusBadRequest,
 					Message: "Error during request",
 					Data: map[string]interface{}{
@@ -47,7 +47,7 @@ func CreateUser() gin.HandlerFunc {
 		if err != nil {
 			c.JSON(
 				http.StatusInternalServerError,
-				responses.UserResponses{
+				responses.Response{
 					Status:  http.StatusInternalServerError,
 					Message: "Internal Server Error",
 					Data: map[string]interface{}{
@@ -60,7 +60,7 @@ func CreateUser() gin.HandlerFunc {
 
 		c.JSON(
 			http.StatusCreated,
-			responses.UserResponses{
+			responses.Response{
 				Status:  http.StatusCreated,
 				Message: "Request Success",
 				Data: map[string]interface{}{
@@ -85,13 +85,13 @@ func GetUser() gin.HandlerFunc {
 		if err != nil {
 			c.JSON(
 				http.StatusInternalServerError,
-				responses.UserResponses{},
+				responses.Response{},
 			)
 		}
 
 		c.JSON(
 			http.StatusOK,
-			responses.UserResponses{
+			responses.Response{
 				Status:  http.StatusOK,
 				Message: "success",
 				Data:    map[string]interface{}{"data": user},
@@ -113,7 +113,7 @@ func EditUser() gin.HandlerFunc {
 		if err != nil {
 			c.JSON(
 				http.StatusInternalServerError,
-				responses.UserResponses{
+				responses.Response{
 					Status:  http.StatusInternalServerError,
 					Message: "error",
 					Data: map[string]interface{}{
@@ -127,7 +127,7 @@ func EditUser() gin.HandlerFunc {
 		if err := c.BindJSON(&user); err != nil {
 			c.JSON(
 				http.StatusBadRequest,
-				responses.UserResponses{
+				responses.Response{
 					Status:  http.StatusBadRequest,
 					Message: "error",
 					Data: map[string]interface{}{
@@ -147,7 +147,7 @@ func EditUser() gin.HandlerFunc {
 		if err != nil {
 			c.JSON(
 				http.StatusInternalServerError,
-				responses.UserResponses{
+				responses.Response{
 					Status:  http.StatusInternalServerError,
 					Message: "error",
 					Data: map[string]interface{}{
@@ -164,7 +164,7 @@ func EditUser() gin.HandlerFunc {
 			if err != nil {
 				c.JSON(
 					http.StatusInternalServerError,
-					responses.UserResponses{
+					responses.Response{
 						Status:  http.StatusInternalServerError,
 						Message: "error",
 						Data: map[string]interface{}{
@@ -178,7 +178,7 @@ func EditUser() gin.HandlerFunc {
 
 		c.JSON(
 			http.StatusOK,
-			responses.UserResponses{
+			responses.Response{
 				Status:  http.StatusOK,
 				Message: "success",
 				Data: map[string]interface{}{
@@ -202,7 +202,7 @@ func DeleteUser() gin.HandlerFunc {
 		if err != nil {
 			c.JSON(
 				http.StatusInternalServerError,
-				responses.UserResponses{
+				responses.Response{
 					Status:  http.StatusInternalServerError,
 					Message: "Failed to find user",
 					Data: map[string]interface{}{
@@ -217,7 +217,7 @@ func DeleteUser() gin.HandlerFunc {
 		if err != nil {
 			c.JSON(
 				http.StatusInternalServerError,
-				responses.UserResponses{
+				responses.Response{
 					Status:  http.StatusInternalServerError,
 					Message: "error",
 					Data: map[string]interface{}{
@@ -231,7 +231,7 @@ func DeleteUser() gin.HandlerFunc {
 		if result.DeletedCount < 1 {
 			c.JSON(
 				http.StatusNotFound,
-				responses.UserResponses{
+				responses.Response{
 					Status:  http.StatusNotFound,
 					Message: "error",
 					Data: map[string]interface{}{
@@ -244,7 +244,7 @@ func DeleteUser() gin.HandlerFunc {
 
 		c.JSON(
 			http.StatusOK,
-			responses.UserResponses{
+			responses.Response{
 				Status:  http.StatusOK,
 				Message: "error",
 				Data: map[string]interface{}{
@@ -265,7 +265,7 @@ func GetAllUsers() gin.HandlerFunc {
 		if err != nil {
 			c.JSON(
 				http.StatusInternalServerError,
-				responses.UserResponses{
+				responses.Response{
 					Status:  http.StatusInternalServerError,
 					Message: "Error fetching data",
 					Data: map[string]interface{}{
@@ -283,7 +283,7 @@ func GetAllUsers() gin.HandlerFunc {
 			if err = results.Decode(&singleUser); err != nil {
 				c.JSON(
 					http.StatusInternalServerError,
-					responses.UserResponses{
+					responses.Response{
 						Status:  http.StatusInternalServerError,
 						Message: "Error fetching data",
 						Data: map[string]interface{}{
@@ -296,7 +296,7 @@ func GetAllUsers() gin.HandlerFunc {
 		}
 		c.JSON(
 			http.StatusOK,
-			responses.UserResponses{
+			responses.Response{
 				Status:  http.StatusOK,
 				Message: "Successfully fetched users",
 				Data: map[string]interface{}{
