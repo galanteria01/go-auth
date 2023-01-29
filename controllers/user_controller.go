@@ -37,9 +37,9 @@ func CreateUser() gin.HandlerFunc {
 		}
 
 		newUser := models.User{
-			Id:    primitive.NewObjectID(),
-			Name:  user.Name,
-			Email: user.Email,
+			Id:      primitive.NewObjectID(),
+			Name:    user.Name,
+			Email:   user.Email,
 			JobRole: user.JobRole,
 		}
 
@@ -139,8 +139,8 @@ func EditUser() gin.HandlerFunc {
 		}
 
 		update := models.User{
-			Name:  user.Name,
-			Email: user.Email,
+			Name:    user.Name,
+			Email:   user.Email,
 			JobRole: user.JobRole,
 		}
 
